@@ -6,6 +6,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -19,37 +21,30 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("mytheme")
 public class MyUI extends UI {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	private VerticalLayout mainLayout=new VerticalLayout();
+	private HeaderLayout headerLayout=new HeaderLayout(this);
+	private BodyLayout bodyLayout=new BodyLayout(this);
+	
 	@Override
     protected void init(VaadinRequest vaadinRequest) {
 
-//    	getPage().addPopStateListener(new PopStateListener() {
-//			
-//
-//			@Override
-//			public void uriChanged(PopStateEvent event) {
-//				switchLocation(event.getUri());
-//				
-//			}
-//		});
-
-    	VerticalLayout mainLayout=new VerticalLayout();
-    	mainLayout.addComponents(new HeaderLayout(this),new BodyLayout(this));
-    	
-    	
+    	mainLayout.addComponents(headerLayout,bodyLayout);
     	setContent(mainLayout);
-    	
     	
     }
 
-//    protected void switchLocation(String uri) {
-//		showNotification(uri);
-//		
-//	}
+
+	public HeaderLayout getHeaderLayout() {
+		return headerLayout;
+	}
+
+	public BodyLayout getBodyLayout() {
+		return bodyLayout;
+	}
+
+
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)

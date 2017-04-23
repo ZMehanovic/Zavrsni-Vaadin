@@ -12,10 +12,11 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class HeaderLayout extends HorizontalLayout {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 901232259231055975L;
+	private static final long serialVersionUID = 1L;
 
 	private MyUI myUI;
 	
@@ -61,7 +62,8 @@ public class HeaderLayout extends HorizontalLayout {
 		btnSearch.setIcon(VaadinIcons.SEARCH);
 		btnSearch.setClickShortcut(KeyCode.ENTER);
 		btnSearch.addClickListener(e-> {
-				Notification.show("Click");
+				myUI.getBodyLayout().searchForMovies(txtSearch.getValue(), 1);
+				
 		});
 		searchLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 		searchLayout.addComponents(txtSearch,btnSearch);
