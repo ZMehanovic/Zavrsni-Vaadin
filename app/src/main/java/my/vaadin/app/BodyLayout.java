@@ -2,16 +2,11 @@ package my.vaadin.app;
 
 import static my.vaadin.app.TMDbPaths.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.ArrayList;
 
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -21,13 +16,10 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 
-import java.lang.Object;
-
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import elemental.json.JsonValue;
-import elemental.json.impl.JsonUtil;
+import my.vaadin.app.DetailsLayout.DetailsLayoutBuilder;
 
 public class BodyLayout extends FormLayout {
 
@@ -42,13 +34,9 @@ public class BodyLayout extends FormLayout {
 
 	private void getStartBody() {
 		removeAllComponents();
-//		JsonValue json=parse
-//		JsonObject jsObject= JsonUtil.parse(popularMovies);
-//		myUI.showNotification(jsObject.get("results").toString());
-		JsonObject jsObject = getJsonObjectFromURL(POPULAR_MOVIES);
+		JsonObject jsObject = JsonSingleton.getInstance().getJsonObjectFromURL(POPULAR_MOVIES);
 
 		if (jsObject!=null){
-//			String str= TMDbPaths.imagePoster;
 			
 			addComponent(getPopularMoviesPosterGrid(jsObject.getArray(RESULTS)));
 			
@@ -58,27 +46,7 @@ public class BodyLayout extends FormLayout {
 		
 	}
 
-	private JsonObject getJsonObjectFromURL(String linkURL){
-		JsonObject jsObject=null;
-		try {
-			URL myservice = new URL(linkURL);
 
-			InputStream openStream = myservice.openStream();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(openStream));
-			String line;
-			String str="";
-			
-			while ((line = bufferedReader.readLine()) != null) {
-				str+=line;
-			}
-			jsObject= JsonUtil.parse(str);
-//			myUI.showNotification(jsObject.getArray("results").getObject(0).getString("overview"));
-//			myUI.showNotification(str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return jsObject;
-	}
 	
 	private GridLayout getPopularMoviesPosterGrid(JsonArray jsResults) {
 		GridLayout popularMoviesGrid = new GridLayout(5, 8);
@@ -92,7 +60,7 @@ public class BodyLayout extends FormLayout {
 				
 				
 				
-				popularMoviesGrid.addComponent(getImage(jsResults.getObject(i)), columnCounter, rowCounter);
+				popularMoviesGrid.addComponent(getImage(jsResults.getObject(i), POSTER_IMAGE_185,false), columnCounter, rowCounter);
 				popularMoviesGrid.addComponent(movieTitle, columnCounter, rowCounter + 1);
 			}
 		}
@@ -100,36 +68,61 @@ public class BodyLayout extends FormLayout {
 		return popularMoviesGrid;
 	}
 	
-	private Image getImage(JsonObject jsObject){
+	public Image getImage(JsonObject jsObject, String imageSize, boolean isFromDetails){
 
 		String poster = jsObject.get(POSTER_PATH).jsEquals(Json.createNull())?"":jsObject.getString(POSTER_PATH);
-
 		String title = jsObject.getString(TITLE);
-//		
+
 		Image img = new Image();
+		
+		
 		if (poster.isEmpty()) {
 			img.setSource(new ThemeResource("images/Default_Image.jpg"));
 		} else {
-			img.setSource(new ExternalResource(POSTER_IMAGE185 + poster));
+			img.setSource(new ExternalResource(imageSize + poster));
 		}
-		img.setWidth("185px");
-		img.setHeight("278px");
+		setImageSize(img, imageSize);
 		
+		img.setId(String.valueOf((int)jsObject.getNumber("id")));
 		img.setDescription(title);
+		img.addClickListener(e -> {
+			if (isFromDetails) {
+				//TODO open original image size (Popup??)
+			} else {
+				removeAllComponents();
+				addComponent(new DetailsLayout.DetailsLayoutBuilder(this, Integer.parseInt(img.getId())).appendVideos(true).build());
+			}
+		});
+	
 		return img;
 	}
 	
+	private void setImageSize(Image img, String imageSize) {
+		if(imageSize.equals(POSTER_IMAGE_185)){
+			img.setWidth("185px");
+			img.setHeight("278px");
+		}else if(imageSize.equals(POSTER_IMAGE_300)){
+			img.setWidth("300px");
+			img.setHeight("450px");
+		}else if(imageSize.equals(POSTER_IMAGE_500)){
+			img.setWidth("500px");
+			img.setHeight("750px");
+		}else{
+			img.setWidth("*");
+			img.setHeight("*");
+		}
+		
+	}
+
 	public void searchForMovies(String searchString,int page){
-		Notification.show(searchString);
 		if(searchString==null||searchString.isEmpty()){
 			getStartBody();
 		}else{
+			//TODO JSON singleton
 			String url=MOVIE_SEARCH+QUERY+searchString+PAGEID+page;
-			JsonObject jsObject= getJsonObjectFromURL(url);
+			JsonObject jsObject= JsonSingleton.getInstance().getJsonObjectFromURL(url);
 			if(jsObject!=null&&jsObject.getNumber(TOTAL_RESULTS)>0){
 				removeAllComponents();
-//				int resultNumber=;
-//				Notification.show(""+resultNumber);
 				addComponent(getSearchLayout(jsObject.getArray(RESULTS)));
 				
 			}else{
@@ -143,8 +136,7 @@ public class BodyLayout extends FormLayout {
 		for(int i=0;i<jsArray.length();i++){
 			JsonObject jsObject=jsArray.get(i);
 			HorizontalLayout imageDetailsLayout=new HorizontalLayout();
-			imageDetailsLayout.addComponents(getImage(jsObject),getMovieDetails(jsObject));
-			
+			imageDetailsLayout.addComponents(getImage(jsObject,POSTER_IMAGE_185, false),getMovieDetails(jsObject));
 			imageDetailsLayout.addStyleName("searchLayoutBorders");
 			searchLayout.addComponent(imageDetailsLayout);
 		}
@@ -164,13 +156,34 @@ public class BodyLayout extends FormLayout {
 		Label description=new Label(jsObject.getString(DESCRIPTION));
 		description.setWidth("800px");
 		HorizontalLayout detailsFooterLayout=new HorizontalLayout();
-//		Label genres=new Label(jsObject.getString(TITLE));
+
+		Label genres=new Label(getGenres(jsObject.getArray(GENRE_IDS)));
 		Label releaseDate=new Label("Release Date: "+jsObject.getString(RELEASE_DATE));
-		detailsFooterLayout.addComponents(releaseDate);
-		
+		detailsFooterLayout.addComponents(genres,releaseDate);
 		
 		movieDetailsLayout.addComponents(detailsHeaderLayout,description,detailsFooterLayout);
 		return movieDetailsLayout;
+	}
+
+	private String getGenres(JsonArray genreIDs) {
+		if(genreIDs==null||genreIDs.length()==0){
+			return "No genres found!";
+		}
+		int[] genres=new int[genreIDs.length()];
+		String genreTitles="";
+		String delimiter="";
+		
+		for (int i=0;i<genreIDs.length();i++) {
+			genres[i]=(int)genreIDs.getNumber(i);
+		}
+		ArrayList<String> genresList=JsonSingleton.getInstance().getGenreList(genres);
+		
+		for (String genre : genresList) {
+			genreTitles+=delimiter+genre;
+			delimiter=", ";
+		}
+		
+		return genreTitles;
 	}
 	
 	

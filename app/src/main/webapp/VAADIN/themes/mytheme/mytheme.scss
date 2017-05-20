@@ -26,11 +26,16 @@ $v-component-group-spacing: 6px;
 }
 @mixin mytheme {
   @include valo;
+  
 .searchLayoutBorders{
 	border: solid;
 	border-width: 2px;
 	border-radius: 6px;
     padding: 10px;
+}
+.h1LabelStyle{
+	font-size: 32px;
+	line-height:normal;
 }
 	
   // Insert your own theme rules here
