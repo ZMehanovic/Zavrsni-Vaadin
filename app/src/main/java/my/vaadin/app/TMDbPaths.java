@@ -11,7 +11,6 @@ public final class TMDbPaths implements Serializable {
 	private final static String IMAGE_PATH = "https://image.tmdb.org/t/p";
 
 	public final static String IMDB_LINK="http://www.imdb.com/title/";
-	public final static String IMDB_ID="imdb_id";
 	public final static String YOUTUBE_TRAILER_ROOT = "https://www.youtube.com/watch?v=";
 	public final static String POPULAR_MOVIES = ROOT + "/discover/movie?sort_by=popularity.desc&" + API_KEY;
 	public final static String POSTER_IMAGE_185 = IMAGE_PATH + "/w185/";
@@ -26,6 +25,7 @@ public final class TMDbPaths implements Serializable {
 	public final static String MOVIE_DETAILS = ROOT + "/movie/" + REPLACE_STRING + "?" + API_KEY;
 	public final static String APPEND_TO_RESPONSE="&append_to_response=";
   
+	public final static String IMDB_ID="imdb_id";
 	public final static String RESULTS = "results";
 	public final static String TOTAL_RESULTS = "total_results";
 	public final static String TOTAL_PAGES = "total_pages";

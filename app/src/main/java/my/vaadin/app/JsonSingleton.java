@@ -68,6 +68,8 @@ public class JsonSingleton {
 			//Some keys might have been deleted by TMDB e.g 10769-Foreign -> https://www.themoviedb.org/talk/586ecd68c3a3683b6900aebc
 			if(genreMap.get(key)!=null){
 				genreList.add(genreMap.get(key).toString());
+			}else{
+				genreList.add("");
 			}
 		}
 		return genreList;

@@ -150,14 +150,16 @@ public class BodyLayout extends FormLayout {
 		
 		HorizontalLayout detailsHeaderLayout=new HorizontalLayout();
 		Label title=new Label("Title: "+jsObject.getString(TITLE));
-		Label vote=new Label("Average vote: "+jsObject.getNumber(VOTE_AVERAGE));
+		HorizontalLayout vote=CustomItems.avgVoteStarLayout(String.valueOf(jsObject.getNumber(VOTE_AVERAGE)));
 		detailsHeaderLayout.addComponents(title,vote);
 		
-		Label description=new Label(jsObject.getString(DESCRIPTION));
-		description.setWidth("800px");
+		Label description=CustomItems.descriptionLabel(jsObject.getString(DESCRIPTION));
+
 		HorizontalLayout detailsFooterLayout=new HorizontalLayout();
 
-		Label genres=new Label(getGenres(jsObject.getArray(GENRE_IDS)));
+//		Label genres=new Label(getGenres(jsObject.getArray(GENRE_IDS)));
+		HorizontalLayout genres=CustomItems.genresLayout(jsObject.getArray(GENRE_IDS), false);
+		
 		Label releaseDate=new Label("Release Date: "+jsObject.getString(RELEASE_DATE));
 		detailsFooterLayout.addComponents(genres,releaseDate);
 		
@@ -165,26 +167,7 @@ public class BodyLayout extends FormLayout {
 		return movieDetailsLayout;
 	}
 
-	private String getGenres(JsonArray genreIDs) {
-		if(genreIDs==null||genreIDs.length()==0){
-			return "No genres found!";
-		}
-		int[] genres=new int[genreIDs.length()];
-		String genreTitles="";
-		String delimiter="";
-		
-		for (int i=0;i<genreIDs.length();i++) {
-			genres[i]=(int)genreIDs.getNumber(i);
-		}
-		ArrayList<String> genresList=JsonSingleton.getInstance().getGenreList(genres);
-		
-		for (String genre : genresList) {
-			genreTitles+=delimiter+genre;
-			delimiter=", ";
-		}
-		
-		return genreTitles;
-	}
+	
 	
 	
 }
