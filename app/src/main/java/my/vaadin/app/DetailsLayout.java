@@ -89,6 +89,7 @@ public class DetailsLayout extends FormLayout {
 		HorizontalLayout movieDetailsHeaderLayout = new HorizontalLayout();
 
 		// TODO add to layout, add icons for bookmarks etc.
+		
 		Label movieName = new Label(jsObject.getString(TITLE));
 		movieName.addStyleName(ValoTheme.LABEL_H2);
 
