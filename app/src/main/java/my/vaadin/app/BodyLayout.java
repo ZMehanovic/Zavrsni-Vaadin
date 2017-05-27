@@ -2,9 +2,7 @@ package my.vaadin.app;
 
 import static my.vaadin.app.TMDbPaths.*;
 
-import java.util.ArrayList;
 
-import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.FormLayout;
@@ -19,7 +17,6 @@ import com.vaadin.ui.VerticalLayout;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import my.vaadin.app.DetailsLayout.DetailsLayoutBuilder;
 
 public class BodyLayout extends FormLayout {
 

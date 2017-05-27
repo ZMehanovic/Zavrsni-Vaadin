@@ -38,6 +38,18 @@ public final class TMDbPaths implements Serializable {
 	public final static String RELEASE_DATE = "release_date";
 	public final static String GENRE_IDS = "genre_ids";
 	public final static String GENRES = "genres";
+	
+
+	public final static String MOVIE_HOME_PAGE = "homepage";
+	public final static String MOVIE_STATUS = "status";
+	public final static String MOVIE_RELEASE_DATE = "release_date";
+	public final static String MOVIE_RUNTIME = "runtime";
+	public final static String MOVIE_COLLECTION = "belongs_to_collection";
+	public final static String MOVIE_PRODUCTION_COMPANY = "production_companies";
+	public final static String MOVIE_PRODUCTION_COUNTRY = "production_countries";
+	public final static String MOVIE_SPOKEN_LANGUAGE = "spoken_languages";
+	public final static String MOVIE_BUDGET = "budget";
+	public final static String MOVIE_REVENUE = "revenue";
 
 	private TMDbPaths() {
 

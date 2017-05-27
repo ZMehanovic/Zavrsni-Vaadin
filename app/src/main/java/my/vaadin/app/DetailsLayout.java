@@ -2,9 +2,8 @@ package my.vaadin.app;
 
 import static my.vaadin.app.TMDbPaths.*;
 
-import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Page.Styles;
+import java.text.DecimalFormat;
+
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,9 +11,12 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import elemental.json.Json;
+import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
 public class DetailsLayout extends FormLayout {
@@ -87,7 +89,7 @@ public class DetailsLayout extends FormLayout {
 
 		// TODO add to layout, add icons for bookmarks etc.
 		Label movieName = new Label(jsObject.getString(TITLE));
-		movieName.addStyleName("h1LabelStyle");
+		movieName.addStyleName(ValoTheme.LABEL_H2);
 
 		Image movieImage = bodyLayout.getImage(jsObject, POSTER_IMAGE_300, true);
 
@@ -110,10 +112,92 @@ public class DetailsLayout extends FormLayout {
 
 		movieDetailsLayout.addComponents(movieImage, middleLayout);
 
-		leftLayout.addComponents(movieName, movieDetailsLayout);
-
+		leftLayout.addComponents(movieName, movieDetailsLayout,getDetailsTabSheet());
+		
+		HorizontalLayout hl=new HorizontalLayout();
+		hl.addComponent(getDetailsTabSheet());
+		
 		return leftLayout;
 	}
+
+	private TabSheet getDetailsTabSheet() {
+		TabSheet movieTabs=new TabSheet();
+		
+		movieTabs.addTab(getDetailsTab(), "Details");
+		movieTabs.addTab(getTrailerTab(), "Trailers");
+		movieTabs.addTab(getImageTab(), "Images");
+		movieTabs.addTab(getCastTab(), "Cast");
+		movieTabs.addTab(getCrewTab(), "Crew");
+		
+		return movieTabs;
+	}
+
+	private VerticalLayout getDetailsTab() {
+		VerticalLayout movieDetails = new VerticalLayout();
+
+		DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+
+		String home=jsObject.getString(MOVIE_HOME_PAGE);
+		Label homePage = CustomItems.htmlLabel("<b>Homepage:</b> <a href='"+home+"' target='_blank'>" +home+"</a>" );
+		Label status = CustomItems.htmlLabel("<b>Status: </b>" + jsObject.getString(MOVIE_STATUS));
+		Label releaseDate = CustomItems.htmlLabel("<b>Release date: </b>" + jsObject.getString(MOVIE_RELEASE_DATE));
+		Label runtime = CustomItems.htmlLabel("<b>Runtime: </b>" + String.valueOf(jsObject.getNumber(MOVIE_RUNTIME)));
+		Label budget = CustomItems.htmlLabel("<b>Budget: </b>" + decimalFormat.format(jsObject.getNumber(MOVIE_BUDGET)));
+		Label revenue = CustomItems.htmlLabel("<b>Revenue: </b>" + decimalFormat.format(jsObject.getNumber(MOVIE_REVENUE)));
+		
+		String collectionString ="<b>Collection: </b>";
+		if (!jsObject.get(MOVIE_COLLECTION).jsEquals(Json.createNull())) {
+			collectionString += jsObject.getObject(MOVIE_COLLECTION).getString("name");
+			//TODO open collection details on click
+		}
+		Label collections = CustomItems.htmlLabel(collectionString);
+		Label productionCompanies=getcompanies(jsObject.getArray(MOVIE_PRODUCTION_COMPANY),"Production companies: ");
+		Label productionCountries=getcompanies(jsObject.getArray(MOVIE_PRODUCTION_COUNTRY),"Production countries: ");
+		Label spokenLanguages=getcompanies(jsObject.getArray(MOVIE_SPOKEN_LANGUAGE),"spoken languages: ");
+		
+		movieDetails.addComponents(homePage, status, releaseDate, runtime, budget, revenue, collections, productionCompanies, productionCountries, spokenLanguages);
+
+		return movieDetails;
+	}
+
+	private Label getcompanies(JsonArray array, String title) {
+		String names="<b>"+title+"</b>";
+		String delim="";
+		for(int i=0;i<array.length();i++){
+			names +=delim+ array.getObject(i).getString("name");
+			delim=", ";
+		}
+		Label l=CustomItems.htmlLabel(names);
+		
+		return l;
+	}
+
+	private Component getTrailerTab() {
+		VerticalLayout movieDetails = new VerticalLayout();
+		movieDetails.addComponent(new Label("test2"));
+
+		return movieDetails;
+	}
+
+	private Component getImageTab() {
+		VerticalLayout movieDetails = new VerticalLayout();
+		movieDetails.addComponent(new Label("test3"));
+
+		return movieDetails;
+	}
+	private Component getCastTab() {
+		VerticalLayout movieDetails = new VerticalLayout();
+		movieDetails.addComponent(new Label("test4"));
+
+		return movieDetails;
+	}
+	private Component getCrewTab() {
+		VerticalLayout movieDetails = new VerticalLayout();
+		movieDetails.addComponent(new Label("test5"));
+
+		return movieDetails;
+	}
+
 
 	private String appendToResponse() {
 		String append = APPEND_TO_RESPONSE;

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -60,6 +61,12 @@ public class CustomItems implements Serializable {
 		}
 
 		return genreLayout;
+	}
+	
+	public static Label htmlLabel(String text){
+		Label l=new Label(text);
+		l.setContentMode(ContentMode.HTML);
+		return l;
 	}
 
 }
