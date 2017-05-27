@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -173,10 +174,17 @@ public class DetailsLayout extends FormLayout {
 	}
 
 	private Component getTrailerTab() {
-		VerticalLayout movieDetails = new VerticalLayout();
-		movieDetails.addComponent(new Label("test2"));
+		CssLayout trailers = new CssLayout();
+		trailers.setWidth("1000px");
+		for(int i=0;i<jsObject.getObject(VIDEOS).getArray(RESULTS).length();i++){
+			Label l=CustomItems.htmlLabel("<iframe width='450' height='300' style='margin:15px;' src='"+YOUTUBE_TRAILER_ROOT+jsObject.getObject(VIDEOS).getArray(RESULTS).getObject(i).getString("key")+"' allowfullscreen ></iframe>");
+			trailers.addComponent(l);
+		}
+		if(trailers.getComponentCount()<1){
+			trailers.addComponent(new Label("No trailers available..."));
+		}
 
-		return movieDetails;
+		return trailers;
 	}
 
 	private Component getImageTab() {
