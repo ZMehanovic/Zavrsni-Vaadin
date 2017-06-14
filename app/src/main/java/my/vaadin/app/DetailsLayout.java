@@ -31,6 +31,7 @@ public class DetailsLayout extends FormLayout {
 	private boolean appendVideos;
 	private boolean appendSimilar;
 	private boolean appendCredits;
+	private boolean appendImages;
 
 	public static class DetailsLayoutBuilder {
 		private BodyLayout bodyLayout;
@@ -39,6 +40,7 @@ public class DetailsLayout extends FormLayout {
 		private boolean appendVideos;
 		private boolean appendSimilar;
 		private boolean appendCredits;
+		private boolean appendImages;
 
 		public DetailsLayoutBuilder(BodyLayout bodyLayout, int movieID) {
 			this.bodyLayout = bodyLayout;
@@ -59,6 +61,10 @@ public class DetailsLayout extends FormLayout {
 			this.appendCredits = appendCredits;
 			return this;
 		}
+		public DetailsLayoutBuilder appendImages(boolean appendImages) {
+			this.appendImages = appendImages;
+			return this;
+		}
 
 		public DetailsLayout build() {
 			return new DetailsLayout(this);
@@ -73,6 +79,7 @@ public class DetailsLayout extends FormLayout {
 		this.appendVideos = builder.appendVideos;
 		this.appendSimilar = builder.appendSimilar;
 		this.appendCredits = builder.appendCredits;
+		this.appendImages = builder.appendImages;
 
 		setMargin(false);
 		setSpacing(false);
@@ -93,7 +100,7 @@ public class DetailsLayout extends FormLayout {
 		Label movieName = new Label(jsObject.getString(TITLE));
 		movieName.addStyleName(ValoTheme.LABEL_H2);
 
-		Image movieImage = bodyLayout.getImage(jsObject, POSTER_IMAGE_300, true);
+		Image movieImage = bodyLayout.getImage(jsObject, POSTER_IMAGE_300, true, false);
 
 		Button imdbLink = new Button("IMDB");
 		imdbLink.setStyleName(ValoTheme.BUTTON_LINK);
@@ -130,6 +137,7 @@ public class DetailsLayout extends FormLayout {
 		movieTabs.addTab(getImageTab(), "Images");
 		movieTabs.addTab(getCastTab(), "Cast");
 		movieTabs.addTab(getCrewTab(), "Crew");
+		movieTabs.addTab(getRecommendationTab(), "Recommendations");
 		
 		return movieTabs;
 	}
@@ -155,7 +163,7 @@ public class DetailsLayout extends FormLayout {
 		Label collections = CustomItems.htmlLabel(collectionString);
 		Label productionCompanies=getcompanies(jsObject.getArray(MOVIE_PRODUCTION_COMPANY),"Production companies: ");
 		Label productionCountries=getcompanies(jsObject.getArray(MOVIE_PRODUCTION_COUNTRY),"Production countries: ");
-		Label spokenLanguages=getcompanies(jsObject.getArray(MOVIE_SPOKEN_LANGUAGE),"spoken languages: ");
+		Label spokenLanguages=getcompanies(jsObject.getArray(MOVIE_SPOKEN_LANGUAGE),"Spoken languages: ");
 		
 		movieDetails.addComponents(homePage, status, releaseDate, runtime, budget, revenue, collections, productionCompanies, productionCountries, spokenLanguages);
 
@@ -189,10 +197,20 @@ public class DetailsLayout extends FormLayout {
 	}
 
 	private Component getImageTab() {
-		VerticalLayout movieDetails = new VerticalLayout();
-		movieDetails.addComponent(new Label("test3"));
-
-		return movieDetails;
+		CssLayout images = new CssLayout();
+		images.setWidth("1000px");
+		
+		for(int i=0;i<jsObject.getObject(IMAGES).getArray(POSTERS).length();i++){
+			//jsObject.getObject(VIDEOS).getArray(RESULTS).getObject(i).getString("key")
+			Image img=bodyLayout.getImage(jsObject.getObject(IMAGES).getArray(POSTERS).getObject(i), POSTER_IMAGE_300, true, true);
+			
+			//img.addStyleName("detailsImageMarginFix");
+			images.addComponent(img);
+		}
+		if(images.getComponentCount()<1){
+			images.addComponent(new Label("No trailers available..."));
+		}
+		return images;
 	}
 	private Component getCastTab() {
 		VerticalLayout movieDetails = new VerticalLayout();
@@ -203,6 +221,12 @@ public class DetailsLayout extends FormLayout {
 	private Component getCrewTab() {
 		VerticalLayout movieDetails = new VerticalLayout();
 		movieDetails.addComponent(new Label("test5"));
+
+		return movieDetails;
+	}
+	private Component getRecommendationTab() {
+		VerticalLayout movieDetails = new VerticalLayout();
+		movieDetails.addComponent(new Label("test6"));
 
 		return movieDetails;
 	}
@@ -221,6 +245,10 @@ public class DetailsLayout extends FormLayout {
 		}
 		if (appendCredits) {
 			append += delimiter + "credits";
+			delimiter = ",";
+		}
+		if (appendImages) {
+			append += delimiter + IMAGES;
 			delimiter = ",";
 		}
 		return append;

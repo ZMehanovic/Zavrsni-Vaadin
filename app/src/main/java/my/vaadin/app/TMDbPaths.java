@@ -39,6 +39,10 @@ public final class TMDbPaths implements Serializable {
 	public final static String GENRE_IDS = "genre_ids";
 	public final static String GENRES = "genres";
 	public final static String VIDEOS = "videos";
+	public final static String IMAGES = "images";
+	public final static String BACKDROPS = "backdrops";
+	public final static String POSTERS = "posters";
+	public final static String POSTER_FILE_PATH = "file_path";
 	
 
 	public final static String MOVIE_HOME_PAGE = "homepage";
@@ -51,6 +55,7 @@ public final class TMDbPaths implements Serializable {
 	public final static String MOVIE_SPOKEN_LANGUAGE = "spoken_languages";
 	public final static String MOVIE_BUDGET = "budget";
 	public final static String MOVIE_REVENUE = "revenue";
+	
 
 	private TMDbPaths() {
 

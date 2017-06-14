@@ -12432,3 +12432,7 @@ div.v-layout.v-horizontal.v-widget {
 	font-size: 32px;
 	line-height: normal;
 }
+
+.mytheme .detailsImageMarginFix {
+	margin: 10px;
+}

@@ -2,7 +2,9 @@ package my.vaadin.app;
 
 import static my.vaadin.app.TMDbPaths.*;
 
+import org.atmosphere.util.annotation.AnnotationDetector.Reporter;
 
+import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.FormLayout;
@@ -57,7 +59,7 @@ public class BodyLayout extends FormLayout {
 				
 				
 				
-				popularMoviesGrid.addComponent(getImage(jsResults.getObject(i), POSTER_IMAGE_185,false), columnCounter, rowCounter);
+				popularMoviesGrid.addComponent(getImage(jsResults.getObject(i), POSTER_IMAGE_185,false, false), columnCounter, rowCounter);
 				popularMoviesGrid.addComponent(movieTitle, columnCounter, rowCounter + 1);
 			}
 		}
@@ -65,10 +67,18 @@ public class BodyLayout extends FormLayout {
 		return popularMoviesGrid;
 	}
 	
-	public Image getImage(JsonObject jsObject, String imageSize, boolean isFromDetails){
+	public Image getImage(JsonObject jsObject, String imageSize, boolean isFromDetails, boolean isFromAppend){
 
-		String poster = jsObject.get(POSTER_PATH).jsEquals(Json.createNull())?"":jsObject.getString(POSTER_PATH);
-		String title = jsObject.getString(TITLE);
+		String poster = "";
+		String title ="";
+		String imageID="";
+		if (isFromAppend) {
+			poster = jsObject.get(POSTER_FILE_PATH).jsEquals(Json.createNull()) ? "" : jsObject.getString(POSTER_FILE_PATH);
+		} else {
+			poster = jsObject.get(POSTER_PATH).jsEquals(Json.createNull()) ? "" : jsObject.getString(POSTER_PATH);
+			title=jsObject.getString(TITLE);
+			imageID=String.valueOf((int)jsObject.getNumber("id"));
+		}
 
 		Image img = new Image();
 		
@@ -80,17 +90,19 @@ public class BodyLayout extends FormLayout {
 		}
 		setImageSize(img, imageSize);
 		
-		img.setId(String.valueOf((int)jsObject.getNumber("id")));
+		img.setId(imageID);
 		img.setDescription(title);
 		img.addClickListener(e -> {
-			if (isFromDetails) {
-				//TODO open original image size (Popup??)
-			} else {
+			if (!isFromDetails) {
 				removeAllComponents();
-				addComponent(new DetailsLayout.DetailsLayoutBuilder(this, Integer.parseInt(img.getId())).appendVideos(true).build());
+				addComponent(new DetailsLayout.DetailsLayoutBuilder(this, Integer.parseInt(img.getId())).appendVideos(true).appendImages(true).appendCredits(true).appendSimilar(true).build());
 			}
 		});
-	
+		if (isFromDetails) {
+			BrowserWindowOpener imgOpener = new BrowserWindowOpener(POSTER_IMAGE_ORIGINAL + poster);
+			imgOpener.setWindowName("_blank");
+			imgOpener.extend(img);
+		}
 		return img;
 	}
 	
@@ -133,7 +145,7 @@ public class BodyLayout extends FormLayout {
 		for(int i=0;i<jsArray.length();i++){
 			JsonObject jsObject=jsArray.get(i);
 			HorizontalLayout imageDetailsLayout=new HorizontalLayout();
-			imageDetailsLayout.addComponents(getImage(jsObject,POSTER_IMAGE_185, false),getMovieDetails(jsObject));
+			imageDetailsLayout.addComponents(getImage(jsObject,POSTER_IMAGE_185, false, false),getMovieDetails(jsObject));
 			imageDetailsLayout.addStyleName("searchLayoutBorders");
 			searchLayout.addComponent(imageDetailsLayout);
 		}
