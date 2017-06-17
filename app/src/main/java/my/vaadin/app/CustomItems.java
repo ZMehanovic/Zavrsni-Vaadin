@@ -1,13 +1,23 @@
 package my.vaadin.app;
 
+import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_185;
+import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_300;
+import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_500;
+import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_ORIGINAL;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.BrowserWindowOpener;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.themes.ValoTheme;
 
 import elemental.json.JsonArray;
 
@@ -27,10 +37,16 @@ public class CustomItems implements Serializable {
 		return voteLayout;
 	}
 
-	public static Label descriptionLabel(String overview) {
+	public static Label descriptionLabel(String overview, boolean isRecommendation) {
 
 		Label description = new Label(overview);
-		description.setWidth("800px");
+		description.setWidthUndefined();
+		if(isRecommendation){
+		description.setWidth("700px");
+		}else{
+			description.setWidth("800px");
+		}
+//		description.width
 
 		return description;
 	}
@@ -68,5 +84,60 @@ public class CustomItems implements Serializable {
 		l.setContentMode(ContentMode.HTML);
 		return l;
 	}
+	
+	public static Image getImage(String poster, String title, String imageID, String imageSize, boolean isFromDetails, BodyLayout bodyLayout){
 
+
+		Image img = new Image();
+		
+		
+		if (poster==null||poster.isEmpty()) {
+			img.setSource(new ThemeResource("images/Default_Image.jpg"));
+		} else {
+			img.setSource(new ExternalResource(imageSize + poster));
+		}
+		setImageSize(img, imageSize);
+		
+		img.setId(imageID);
+		img.setDescription(title);
+		img.addClickListener(e -> {
+			if (!isFromDetails) {
+				bodyLayout.removeAllComponents();
+				bodyLayout.addComponent(new DetailsLayout.DetailsLayoutBuilder(bodyLayout, Integer.parseInt(img.getId())).appendVideos(true).appendImages(true).appendCredits(true).appendSimilar(true).build());
+			}
+		});
+		if (isFromDetails) {
+			BrowserWindowOpener imgOpener = new BrowserWindowOpener(POSTER_IMAGE_ORIGINAL + poster);
+			imgOpener.setWindowName("_blank");
+			imgOpener.extend(img);
+		}
+		return img;
+	}
+	
+	private static void setImageSize(Image img, String imageSize) {
+		if(imageSize.equals(POSTER_IMAGE_185)){
+			img.setWidth("185px");
+			img.setHeight("278px");
+		}else if(imageSize.equals(POSTER_IMAGE_300)){
+			img.setWidth("300px");
+			img.setHeight("450px");
+		}else if(imageSize.equals(POSTER_IMAGE_500)){
+			img.setWidth("500px");
+			img.setHeight("750px");
+		}else{
+			img.setWidth("*");
+			img.setHeight("*");
+		}
+	}
+	
+	public static Button createBorderlessButton(String text,boolean selected){
+		Button btn = new Button(text);
+		if (selected) {
+			btn.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+		} else {
+			btn.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+		}
+		return btn;
+		
+	}
 }

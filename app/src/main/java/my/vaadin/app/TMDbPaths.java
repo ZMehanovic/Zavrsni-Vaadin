@@ -29,6 +29,7 @@ public final class TMDbPaths implements Serializable {
 	public final static String RESULTS = "results";
 	public final static String TOTAL_RESULTS = "total_results";
 	public final static String TOTAL_PAGES = "total_pages";
+	public final static String CURRENT_PAGE = "page";
 	public final static String TITLE = "title";
 	public final static String ORIGINAL_TITLE = "original_title";
 	public final static String POSTER_PATH = "poster_path";
@@ -43,6 +44,15 @@ public final class TMDbPaths implements Serializable {
 	public final static String BACKDROPS = "backdrops";
 	public final static String POSTERS = "posters";
 	public final static String POSTER_FILE_PATH = "file_path";
+	public final static String CAST_CREW_PROFILE_PATH = "profile_path";
+	public final static String CAST_CHARACTER = "character";
+	public final static String CAST_CREW_NAME = "name";
+	public final static String CREDITS = "credits";
+	public final static String CAST = "cast";
+	public final static String CREW = "crew";
+	public final static String CREW_DEPARTMENT =  "department";
+	public final static String CREW_JOB =  "job";
+	public final static String RECOMMENDATIONS =  "similar";
 	
 
 	public final static String MOVIE_HOME_PAGE = "homepage";
