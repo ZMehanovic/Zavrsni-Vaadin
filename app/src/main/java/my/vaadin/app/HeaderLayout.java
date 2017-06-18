@@ -62,7 +62,7 @@ public class HeaderLayout extends HorizontalLayout {
 		btnSearch.setIcon(VaadinIcons.SEARCH);
 		btnSearch.setClickShortcut(KeyCode.ENTER);
 		btnSearch.addClickListener(e-> {
-				myUI.getBodyLayout().searchForMovies(txtSearch.getValue().replaceAll(" ", "%20"), 1);
+				myUI.getBodyLayout().searchForMovies(false, txtSearch.getValue().replaceAll(" ", "%20"), 1);
 				
 		});
 		searchLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);

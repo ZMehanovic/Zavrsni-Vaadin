@@ -1,11 +1,20 @@
 package my.vaadin.app;
 
-import static my.vaadin.app.TMDbPaths.*;
+import static my.vaadin.app.Constants.CURRENT_PAGE;
+import static my.vaadin.app.Constants.DESCRIPTION;
+import static my.vaadin.app.Constants.GENRE_IDS;
+import static my.vaadin.app.Constants.NAVIGATION_RESULT_PAGE_NUMBER;
+import static my.vaadin.app.Constants.NAVIGATION_SEARCH_PAGE;
+import static my.vaadin.app.Constants.POSTER_IMAGE_185;
+import static my.vaadin.app.Constants.POSTER_PATH;
+import static my.vaadin.app.Constants.RELEASE_DATE;
+import static my.vaadin.app.Constants.RESULTS;
+import static my.vaadin.app.Constants.TITLE;
+import static my.vaadin.app.Constants.TOTAL_PAGES;
+import static my.vaadin.app.Constants.VOTE_AVERAGE;
 
-import org.atmosphere.cpr.AtmosphereRequestImpl.Body;
-
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -26,21 +35,25 @@ public class SearchLayout extends VerticalLayout {
 	public SearchLayout(BodyLayout bodyLayout, JsonObject jsonObject, boolean isRecommendation, String searchQuery) {
 		this.bodyLayout = bodyLayout;
 		this.isRecommendation = isRecommendation;
-		this.searchQuery=searchQuery;
+		this.searchQuery = searchQuery;
 		setSearchLayout(jsonObject.getArray(RESULTS));
-		if(searchQuery!=null&&jsonObject.getNumber(TOTAL_PAGES)>1){
-			resolvePagingLayout((int)jsonObject.getNumber(CURRENT_PAGE), (int)jsonObject.getNumber(TOTAL_PAGES));
-			
+
+		int currentPage = (int) jsonObject.getNumber(CURRENT_PAGE);
+		if (searchQuery != null && jsonObject.getNumber(TOTAL_PAGES) > 1) {
+			resolvePagingLayout(currentPage, (int) jsonObject.getNumber(TOTAL_PAGES));
+
 		}
-		setWidth("1100px");
+		setWidth("1050px");
+
+		Page.getCurrent().pushState(NAVIGATION_SEARCH_PAGE + searchQuery + NAVIGATION_RESULT_PAGE_NUMBER + currentPage);
 	}
 
 	private void resolvePagingLayout(int currentPage, int totalPages) {
 
 		if (currentPage <= 3) {
-			int endCounter=6;
-			if(totalPages<5){
-				endCounter=totalPages+1;
+			int endCounter = 6;
+			if (totalPages < 5) {
+				endCounter = totalPages + 1;
 			}
 			setPagingLayout(currentPage, totalPages, 1, endCounter);
 		} else if (currentPage + 2 >= totalPages) {
@@ -48,57 +61,56 @@ public class SearchLayout extends VerticalLayout {
 		} else {
 			setPagingLayout(currentPage, totalPages, currentPage - 2, currentPage + 3);
 		}
-		
+
 	}
 
 	private void setPagingLayout(int currentPage, int lastPage, int startCounter, int endCounter) {
 
-		HorizontalLayout pagesLayout=new HorizontalLayout();
+		HorizontalLayout pagesLayout = new HorizontalLayout();
 		if (currentPage != 1) {
-			if (lastPage > 5&&currentPage>3) {
+			if (lastPage > 5 && currentPage > 3) {
 				Button first = CustomItems.createBorderlessButton("First", false);
 				first.addClickListener(e -> {
-					bodyLayout.searchForMovies(searchQuery, 1);
+					bodyLayout.searchForMovies(true, searchQuery, 1);
 				});
 				pagesLayout.addComponent(first);
 			}
-			
-			Button previous =CustomItems.createBorderlessButton("Previous", false);
+
+			Button previous = CustomItems.createBorderlessButton("Previous", false);
 			previous.addClickListener(e -> {
-				bodyLayout.searchForMovies(searchQuery, currentPage - 1);
+				bodyLayout.searchForMovies(true, searchQuery, currentPage - 1);
 			});
 			pagesLayout.addComponents(previous);
 		}
 		for (int i = startCounter; i < endCounter; i++) {
-			Button page =CustomItems.createBorderlessButton(i+"", false);
+			Button page = CustomItems.createBorderlessButton(i + "", false);
 			final int pageNum = i;
 			if (currentPage == i) {
 				page.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 			}
 
 			page.addClickListener(e -> {
-				bodyLayout.searchForMovies(searchQuery, pageNum);
+				bodyLayout.searchForMovies(true, searchQuery, pageNum);
 			});
 			pagesLayout.addComponent(page);
 		}
 		if (currentPage != lastPage) {
-			
-			Button next = CustomItems.createBorderlessButton("Next",false);
+
+			Button next = CustomItems.createBorderlessButton("Next", false);
 
 			next.addClickListener(e -> {
-				bodyLayout.searchForMovies(searchQuery, currentPage + 1);
+				bodyLayout.searchForMovies(true, searchQuery, currentPage + 1);
 			});
 			pagesLayout.addComponent(next);
-			
-			if (currentPage+2<lastPage) {
+
+			if (currentPage + 2 < lastPage) {
 				Button last = CustomItems.createBorderlessButton("Last", false);
 				last.addClickListener(e -> {
-					bodyLayout.searchForMovies(searchQuery, lastPage);
+					bodyLayout.searchForMovies(true, searchQuery, lastPage);
 				});
 				pagesLayout.addComponent(last);
 			}
 		}
-		
 
 		addComponent(pagesLayout);
 	}
@@ -120,9 +132,7 @@ public class SearchLayout extends VerticalLayout {
 			imageDetailsLayout.addStyleName("searchLayoutBorders");
 			addComponent(imageDetailsLayout);
 		}
-		
 
-		
 	}
 
 	private VerticalLayout getMovieDetails(JsonObject jsObject) {

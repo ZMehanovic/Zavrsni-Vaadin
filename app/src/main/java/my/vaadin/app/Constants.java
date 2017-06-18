@@ -2,7 +2,7 @@ package my.vaadin.app;
 
 import java.io.Serializable;
 
-public final class TMDbPaths implements Serializable {
+public final class Constants implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,8 +66,17 @@ public final class TMDbPaths implements Serializable {
 	public final static String MOVIE_BUDGET = "budget";
 	public final static String MOVIE_REVENUE = "revenue";
 	
+	//Navigation
+	private final static String NAVIGATION_PAGE_ID="?pageId=";
+	private final static String NAVIGATION_MOVIE_ID="&movieId=";
+	
+	public final static String NAVIGATION_RESULT_PAGE_NUMBER="&resultPage=";
+	
+	public final static String NAVIGATION_START_PAGE=NAVIGATION_PAGE_ID+PageIds.START.getPageId();
+	public final static String NAVIGATION_SEARCH_PAGE=NAVIGATION_PAGE_ID+PageIds.SEARCH.getPageId()+QUERY;
+	public final static String NAVIGATION_DETAILS_PAGE=NAVIGATION_PAGE_ID+PageIds.MOVIE_DETAILS.getPageId()+NAVIGATION_MOVIE_ID;
 
-	private TMDbPaths() {
+	private Constants() {
 
 	}
 }

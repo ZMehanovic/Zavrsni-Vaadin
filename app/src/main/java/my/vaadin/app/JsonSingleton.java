@@ -1,8 +1,8 @@
 package my.vaadin.app;
 
 
-import static my.vaadin.app.TMDbPaths.LIST_OF_GENRES;
-import static my.vaadin.app.TMDbPaths.GENRES;
+import static my.vaadin.app.Constants.LIST_OF_GENRES;
+import static my.vaadin.app.Constants.GENRES;
 
 
 import java.io.BufferedReader;

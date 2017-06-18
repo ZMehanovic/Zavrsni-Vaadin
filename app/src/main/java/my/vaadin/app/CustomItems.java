@@ -1,9 +1,9 @@
 package my.vaadin.app;
 
-import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_185;
-import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_300;
-import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_500;
-import static my.vaadin.app.TMDbPaths.POSTER_IMAGE_ORIGINAL;
+import static my.vaadin.app.Constants.POSTER_IMAGE_185;
+import static my.vaadin.app.Constants.POSTER_IMAGE_300;
+import static my.vaadin.app.Constants.POSTER_IMAGE_500;
+import static my.vaadin.app.Constants.POSTER_IMAGE_ORIGINAL;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -102,8 +102,7 @@ public class CustomItems implements Serializable {
 		img.setDescription(title);
 		img.addClickListener(e -> {
 			if (!isFromDetails) {
-				bodyLayout.removeAllComponents();
-				bodyLayout.addComponent(new DetailsLayout.DetailsLayoutBuilder(bodyLayout, Integer.parseInt(img.getId())).appendVideos(true).appendImages(true).appendCredits(true).appendSimilar(true).build());
+				bodyLayout.showMovieDetails(Integer.parseInt(img.getId()));
 			}
 		});
 		if (isFromDetails) {

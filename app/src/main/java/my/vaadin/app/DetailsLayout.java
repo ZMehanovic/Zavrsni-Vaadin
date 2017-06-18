@@ -1,9 +1,48 @@
 package my.vaadin.app;
 
-import static my.vaadin.app.TMDbPaths.*;
+import static my.vaadin.app.Constants.APPEND_TO_RESPONSE;
+import static my.vaadin.app.Constants.CAST;
+import static my.vaadin.app.Constants.CAST_CHARACTER;
+import static my.vaadin.app.Constants.CAST_CREW_NAME;
+import static my.vaadin.app.Constants.CAST_CREW_PROFILE_PATH;
+import static my.vaadin.app.Constants.CREDITS;
+import static my.vaadin.app.Constants.CREW;
+import static my.vaadin.app.Constants.CREW_DEPARTMENT;
+import static my.vaadin.app.Constants.CREW_JOB;
+import static my.vaadin.app.Constants.DESCRIPTION;
+import static my.vaadin.app.Constants.GENRES;
+import static my.vaadin.app.Constants.IMAGES;
+import static my.vaadin.app.Constants.IMDB_ID;
+import static my.vaadin.app.Constants.IMDB_LINK;
+import static my.vaadin.app.Constants.MOVIE_BUDGET;
+import static my.vaadin.app.Constants.MOVIE_COLLECTION;
+import static my.vaadin.app.Constants.MOVIE_DETAILS;
+import static my.vaadin.app.Constants.MOVIE_HOME_PAGE;
+import static my.vaadin.app.Constants.MOVIE_PRODUCTION_COMPANY;
+import static my.vaadin.app.Constants.MOVIE_PRODUCTION_COUNTRY;
+import static my.vaadin.app.Constants.MOVIE_RELEASE_DATE;
+import static my.vaadin.app.Constants.MOVIE_REVENUE;
+import static my.vaadin.app.Constants.MOVIE_RUNTIME;
+import static my.vaadin.app.Constants.MOVIE_SPOKEN_LANGUAGE;
+import static my.vaadin.app.Constants.MOVIE_STATUS;
+import static my.vaadin.app.Constants.NAVIGATION_DETAILS_PAGE;
+import static my.vaadin.app.Constants.POSTERS;
+import static my.vaadin.app.Constants.POSTER_FILE_PATH;
+import static my.vaadin.app.Constants.POSTER_IMAGE_185;
+import static my.vaadin.app.Constants.POSTER_IMAGE_300;
+import static my.vaadin.app.Constants.POSTER_PATH;
+import static my.vaadin.app.Constants.RECOMMENDATIONS;
+import static my.vaadin.app.Constants.REPLACE_STRING;
+import static my.vaadin.app.Constants.RESULTS;
+import static my.vaadin.app.Constants.TITLE;
+import static my.vaadin.app.Constants.VIDEOS;
+import static my.vaadin.app.Constants.VOTE_AVERAGE;
+import static my.vaadin.app.Constants.VOTE_COUNT;
+import static my.vaadin.app.Constants.YOUTUBE_TRAILER_ROOT;
 
 import java.text.DecimalFormat;
 
+import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -12,16 +51,13 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 public class DetailsLayout extends FormLayout {
 
@@ -119,7 +155,7 @@ public class DetailsLayout extends FormLayout {
 		HorizontalLayout avgVote = CustomItems.avgVoteStarLayout(String.valueOf(jsObject.getNumber(VOTE_AVERAGE)));
 		avgVote.setDescription(String.valueOf(jsObject.getNumber(VOTE_COUNT)));
 
-		Label description = CustomItems.descriptionLabel(jsObject.getString(DESCRIPTION),true);
+		Label description = CustomItems.descriptionLabel(jsObject.getString(DESCRIPTION), true);
 		HorizontalLayout genres = CustomItems.genresLayout(jsObject.getArray(GENRES), true);
 
 		movieDetailsHeaderLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
@@ -133,6 +169,8 @@ public class DetailsLayout extends FormLayout {
 
 		HorizontalLayout hl = new HorizontalLayout();
 		hl.addComponent(getDetailsTabSheet());
+
+		Page.getCurrent().pushState(NAVIGATION_DETAILS_PAGE + imageID);
 
 		return leftLayout;
 	}
