@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.BrowserWindowOpener;
-import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ExternalResource;import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
@@ -136,6 +136,14 @@ public class CustomItems implements Serializable {
 		} else {
 			btn.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		}
+		return btn;
+		
+	}
+	public static Button createComboBoxButtons(String text){
+		Button btn = new Button(text);
+		btn.setIcon(VaadinIcons.CLOSE_SMALL);
+		btn.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+		
 		return btn;
 		
 	}

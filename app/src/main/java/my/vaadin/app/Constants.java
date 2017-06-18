@@ -10,6 +10,7 @@ public final class Constants implements Serializable {
 	private final static String ROOT = "https://api.themoviedb.org/3";
 	private final static String IMAGE_PATH = "https://image.tmdb.org/t/p";
 
+	public final static String REPLACE_STRING = "REPLACE";
 	public final static String IMDB_LINK="http://www.imdb.com/title/";
 	public final static String YOUTUBE_TRAILER_ROOT = "//www.youtube.com/embed/";
 	public final static String POPULAR_MOVIES = ROOT + "/discover/movie?sort_by=popularity.desc&" + API_KEY;
@@ -21,7 +22,6 @@ public final class Constants implements Serializable {
 	public final static String QUERY = "&query=";
 	public final static String PAGEID = "&page=";
 	public final static String LIST_OF_GENRES = ROOT + "/genre/list?" + API_KEY;
-	public final static String REPLACE_STRING = "REPLACE";
 	public final static String MOVIE_DETAILS = ROOT + "/movie/" + REPLACE_STRING + "?" + API_KEY;
 	public final static String APPEND_TO_RESPONSE="&append_to_response=";
   
@@ -54,7 +54,7 @@ public final class Constants implements Serializable {
 	public final static String CREW_JOB =  "job";
 	public final static String RECOMMENDATIONS =  "similar";
 	
-
+	//Movie details
 	public final static String MOVIE_HOME_PAGE = "homepage";
 	public final static String MOVIE_STATUS = "status";
 	public final static String MOVIE_RELEASE_DATE = "release_date";
@@ -66,15 +66,22 @@ public final class Constants implements Serializable {
 	public final static String MOVIE_BUDGET = "budget";
 	public final static String MOVIE_REVENUE = "revenue";
 	
+	//Genre browse
+	public final static String BROWSE_GENRE = ROOT+"/genre/"+REPLACE_STRING+"/movies?"+API_KEY+PAGEID;
+//	"http://api.themoviedb.org/3/genre/", id, "/movies?api_key=
+	
+	
 	//Navigation
 	private final static String NAVIGATION_PAGE_ID="?pageId=";
 	private final static String NAVIGATION_MOVIE_ID="&movieId=";
 	
 	public final static String NAVIGATION_RESULT_PAGE_NUMBER="&resultPage=";
+	public final static String NAVIGATION_GENRE_IDS="&genreIds=";
 	
 	public final static String NAVIGATION_START_PAGE=NAVIGATION_PAGE_ID+PageIds.START.getPageId();
 	public final static String NAVIGATION_SEARCH_PAGE=NAVIGATION_PAGE_ID+PageIds.SEARCH.getPageId()+QUERY;
 	public final static String NAVIGATION_DETAILS_PAGE=NAVIGATION_PAGE_ID+PageIds.MOVIE_DETAILS.getPageId()+NAVIGATION_MOVIE_ID;
+	public final static String NAVIGATION_BROWSE_PAGE=NAVIGATION_PAGE_ID+PageIds.BROWSE.getPageId();
 
 	private Constants() {
 

@@ -1,15 +1,6 @@
 package my.vaadin.app;
 
-import static my.vaadin.app.Constants.MOVIE_SEARCH;
-import static my.vaadin.app.Constants.NAVIGATION_START_PAGE;
-import static my.vaadin.app.Constants.PAGEID;
-import static my.vaadin.app.Constants.POPULAR_MOVIES;
-import static my.vaadin.app.Constants.POSTER_IMAGE_185;
-import static my.vaadin.app.Constants.POSTER_PATH;
-import static my.vaadin.app.Constants.QUERY;
-import static my.vaadin.app.Constants.RESULTS;
-import static my.vaadin.app.Constants.TITLE;
-import static my.vaadin.app.Constants.TOTAL_RESULTS;
+import static my.vaadin.app.Constants.*;
 
 import com.vaadin.server.Page;
 import com.vaadin.ui.FormLayout;
@@ -81,7 +72,7 @@ public class BodyLayout extends FormLayout {
 			JsonObject jsObject = JsonSingleton.getInstance().getJsonObjectFromURL(url);
 			if (jsObject != null && jsObject.getNumber(TOTAL_RESULTS) > 0) {
 				removeAllComponents();
-				addComponent(new SearchLayout(this, jsObject, false, searchString));
+				addComponent(new SearchLayout(this, jsObject, false, searchString, null));
 				if (scrollToTop) {
 					UI.getCurrent().scrollIntoView(myUI.getHeaderLayout());
 				}
@@ -96,5 +87,17 @@ public class BodyLayout extends FormLayout {
 		addComponent(new DetailsLayout.DetailsLayoutBuilder(this, movieId).appendVideos(true).appendImages(true)
 				.appendCredits(true).appendSimilar(true).build());
 
+	}
+
+	public void browseGenres(boolean scrollToTop,String genreIds, int page) {
+
+		BrowseGenresLayout browseLayout=new BrowseGenresLayout();
+		browseLayout.loadData(this, genreIds, page);
+		removeAllComponents();
+		addComponent(browseLayout);
+		
+		if (scrollToTop) {
+			UI.getCurrent().scrollIntoView(myUI.getHeaderLayout());
+		}
 	}
 }

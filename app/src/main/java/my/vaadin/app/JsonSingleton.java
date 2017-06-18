@@ -30,7 +30,7 @@ public class JsonSingleton {
 	}
 	
 
-	public final HashMap<Integer, String> genreMap=getGenreMap();
+	private final HashMap<Integer, String> genreMap=getGenres();
 	
 	public JsonObject getJsonObjectFromURL(String linkURL){
 		JsonObject jsObject=null;
@@ -52,7 +52,7 @@ public class JsonSingleton {
 		return jsObject;
 	}
 	
-	private HashMap<Integer, String> getGenreMap() {
+	private HashMap<Integer, String> getGenres() {
 		// TODO Auto-generated method stub
 		JsonArray jsObject=getJsonObjectFromURL(LIST_OF_GENRES).getArray(GENRES);
 		HashMap<Integer, String> genresMap=new HashMap<>();
@@ -74,6 +74,11 @@ public class JsonSingleton {
 		}
 		return genreList;
 	}
+
+	public HashMap<Integer, String> getGenreMap() {
+		return genreMap;
+	}
+
 	
 	
 }

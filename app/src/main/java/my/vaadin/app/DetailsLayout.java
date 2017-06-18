@@ -185,7 +185,7 @@ public class DetailsLayout extends FormLayout {
 		movieTabs.addTab(getCrewTab(), "Crew");
 		// Notification.show(UI.getCurrent().getPage().getBrowserWindowWidth()+"
 		// ");
-		movieTabs.addTab(new SearchLayout(bodyLayout, jsObject.getObject(RECOMMENDATIONS), true, null),
+		movieTabs.addTab(new SearchLayout(bodyLayout, jsObject.getObject(RECOMMENDATIONS), true, null, null),
 				"Recommendations");
 
 		return movieTabs;

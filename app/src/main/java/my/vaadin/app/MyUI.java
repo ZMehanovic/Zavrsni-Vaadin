@@ -47,7 +47,7 @@ public class MyUI extends UI {
 
 		});
 
-		if (Page.getCurrent().getLocation() == null || Page.getCurrent().getLocation().toString().isEmpty()) {
+		if (Page.getCurrent().getLocation() == null || Page.getCurrent().getLocation().toString().isEmpty() || !Page.getCurrent().getLocation().toString().contains("?")) {
 
 			Page.getCurrent().pushState(NAVIGATION_START_PAGE);
 		} else {
@@ -85,7 +85,15 @@ public class MyUI extends UI {
 			int movieId = Integer.parseInt(splitVariables[1].split("=")[1]);
 			bodyLayout.showMovieDetails(movieId);
 			break;
-
+		case 4:
+			String genres=null;
+			int resPage = 1;
+			if(splitVariables.length>1){
+				genres= splitVariables[1].split("=")[1];
+				resPage=Integer.parseInt(splitVariables[2].split("=")[1]);
+			}
+			bodyLayout.browseGenres(false, genres, resPage);
+			break;
 		default:
 			break;
 		}

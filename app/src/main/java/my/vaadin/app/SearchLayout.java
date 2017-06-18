@@ -30,22 +30,28 @@ public class SearchLayout extends VerticalLayout {
 
 	private BodyLayout bodyLayout;
 	private boolean isRecommendation;
+	private String genreIds;
 	private String searchQuery;
 
-	public SearchLayout(BodyLayout bodyLayout, JsonObject jsonObject, boolean isRecommendation, String searchQuery) {
+	public SearchLayout(BodyLayout bodyLayout, JsonObject jsonObject, boolean isRecommendation, String searchQuery,
+			String genreIds) {
 		this.bodyLayout = bodyLayout;
 		this.isRecommendation = isRecommendation;
+		this.genreIds = genreIds;
 		this.searchQuery = searchQuery;
 		setSearchLayout(jsonObject.getArray(RESULTS));
 
 		int currentPage = (int) jsonObject.getNumber(CURRENT_PAGE);
-		if (searchQuery != null && jsonObject.getNumber(TOTAL_PAGES) > 1) {
+		if (!isRecommendation && jsonObject.getNumber(TOTAL_PAGES) > 1) {
+			//TODO check why TMDb is weird (12,18 not ok 18,12 is ok?!?) BROWSE
 			resolvePagingLayout(currentPage, (int) jsonObject.getNumber(TOTAL_PAGES));
 
 		}
 		setWidth("1050px");
-
-		Page.getCurrent().pushState(NAVIGATION_SEARCH_PAGE + searchQuery + NAVIGATION_RESULT_PAGE_NUMBER + currentPage);
+		if (genreIds == null) {
+			Page.getCurrent()
+					.pushState(NAVIGATION_SEARCH_PAGE + searchQuery + NAVIGATION_RESULT_PAGE_NUMBER + currentPage);
+		}
 	}
 
 	private void resolvePagingLayout(int currentPage, int totalPages) {
@@ -71,14 +77,14 @@ public class SearchLayout extends VerticalLayout {
 			if (lastPage > 5 && currentPage > 3) {
 				Button first = CustomItems.createBorderlessButton("First", false);
 				first.addClickListener(e -> {
-					bodyLayout.searchForMovies(true, searchQuery, 1);
+					openPage(1);
 				});
 				pagesLayout.addComponent(first);
 			}
 
 			Button previous = CustomItems.createBorderlessButton("Previous", false);
 			previous.addClickListener(e -> {
-				bodyLayout.searchForMovies(true, searchQuery, currentPage - 1);
+				openPage(currentPage - 1);
 			});
 			pagesLayout.addComponents(previous);
 		}
@@ -90,7 +96,7 @@ public class SearchLayout extends VerticalLayout {
 			}
 
 			page.addClickListener(e -> {
-				bodyLayout.searchForMovies(true, searchQuery, pageNum);
+				openPage(pageNum);
 			});
 			pagesLayout.addComponent(page);
 		}
@@ -99,20 +105,28 @@ public class SearchLayout extends VerticalLayout {
 			Button next = CustomItems.createBorderlessButton("Next", false);
 
 			next.addClickListener(e -> {
-				bodyLayout.searchForMovies(true, searchQuery, currentPage + 1);
+				openPage(currentPage + 1);
 			});
 			pagesLayout.addComponent(next);
 
 			if (currentPage + 2 < lastPage) {
 				Button last = CustomItems.createBorderlessButton("Last", false);
 				last.addClickListener(e -> {
-					bodyLayout.searchForMovies(true, searchQuery, lastPage);
+					openPage(lastPage);
 				});
 				pagesLayout.addComponent(last);
 			}
 		}
 
 		addComponent(pagesLayout);
+	}
+
+	private void openPage(int pageNumber) {
+		if (genreIds!=null) {
+			bodyLayout.browseGenres(true, genreIds, pageNumber);
+		} else {
+			bodyLayout.searchForMovies(true, searchQuery, pageNumber);
+		}
 	}
 
 	private void setSearchLayout(JsonArray jsArray) {
@@ -152,7 +166,13 @@ public class SearchLayout extends VerticalLayout {
 		Label releaseDate = new Label("Release Date: " + jsObject.getString(RELEASE_DATE));
 		detailsFooterLayout.addComponents(genres, releaseDate);
 
-		movieDetailsLayout.addComponents(detailsHeaderLayout, description, detailsFooterLayout);
+		Button moreDetails = new Button("More details...");
+		moreDetails.setStyleName(ValoTheme.BUTTON_LINK);
+		moreDetails.addClickListener(e->{
+			bodyLayout.showMovieDetails((int) jsObject.getNumber("id"));
+		});
+
+		movieDetailsLayout.addComponents(detailsHeaderLayout, description, detailsFooterLayout, moreDetails);
 		return movieDetailsLayout;
 	}
 

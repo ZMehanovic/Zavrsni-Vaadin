@@ -40,7 +40,7 @@ public class HeaderLayout extends HorizontalLayout {
 
 		btnBrowse.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		btnBrowse.addClickListener(e -> {
-			Notification.show("Click");
+			myUI.getBodyLayout().browseGenres(false, null, 1);
 		});
 		btnLogin.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		btnLogin.addClickListener(e -> {
