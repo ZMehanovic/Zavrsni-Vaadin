@@ -1,4 +1,4 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
 public enum PageIds {
 	START(1),

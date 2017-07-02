@@ -1,9 +1,8 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
 
-import static my.vaadin.app.Constants.LIST_OF_GENRES;
-import static my.vaadin.app.Constants.GENRES;
-
+import static my.vaadin.app.client.Constants.GENRES;
+import static my.vaadin.app.client.Constants.LIST_OF_GENRES;
 
 import java.io.BufferedReader;
 import java.io.IOException;

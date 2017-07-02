@@ -1,6 +1,6 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
-import static my.vaadin.app.Constants.*;
+import static my.vaadin.app.client.Constants.*;
 
 import com.vaadin.server.Page;
 import com.vaadin.ui.FormLayout;

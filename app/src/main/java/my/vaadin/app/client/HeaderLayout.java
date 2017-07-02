@@ -1,4 +1,4 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.icons.VaadinIcons;
@@ -44,11 +44,12 @@ public class HeaderLayout extends HorizontalLayout {
 		});
 		btnLogin.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		btnLogin.addClickListener(e -> {
-			Notification.show("Click");
+			final LoginWindow loginWindow=new LoginWindow();
+			myUI.addWindow(loginWindow);
 		});
 		btnRegister.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		btnRegister.addClickListener(e -> {
-			Notification.show("Click");
+//			Notification.show("Click");
 		});
 
 		buttons.addComponents(btnBrowse, btnLogin, btnRegister);

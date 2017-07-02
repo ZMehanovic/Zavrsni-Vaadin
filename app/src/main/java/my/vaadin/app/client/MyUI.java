@@ -1,6 +1,6 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
-import static my.vaadin.app.Constants.NAVIGATION_START_PAGE;
+import static my.vaadin.app.client.Constants.NAVIGATION_START_PAGE;
 
 import javax.servlet.annotation.WebServlet;
 

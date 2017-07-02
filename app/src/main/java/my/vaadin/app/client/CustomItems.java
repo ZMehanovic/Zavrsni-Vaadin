@@ -1,9 +1,9 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
-import static my.vaadin.app.Constants.POSTER_IMAGE_185;
-import static my.vaadin.app.Constants.POSTER_IMAGE_300;
-import static my.vaadin.app.Constants.POSTER_IMAGE_500;
-import static my.vaadin.app.Constants.POSTER_IMAGE_ORIGINAL;
+import static my.vaadin.app.client.Constants.POSTER_IMAGE_185;
+import static my.vaadin.app.client.Constants.POSTER_IMAGE_300;
+import static my.vaadin.app.client.Constants.POSTER_IMAGE_500;
+import static my.vaadin.app.client.Constants.POSTER_IMAGE_ORIGINAL;
 
 import java.io.Serializable;
 import java.util.ArrayList;

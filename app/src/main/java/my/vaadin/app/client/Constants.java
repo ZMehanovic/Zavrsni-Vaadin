@@ -1,4 +1,4 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ public final class Constants implements Serializable {
 	private final static String ROOT = "https://api.themoviedb.org/3";
 	private final static String IMAGE_PATH = "https://image.tmdb.org/t/p";
 
-	public final static String REPLACE_STRING = "REPLACE";
+	public final static String REPLACE_STRING = "string_to_be_replaced";
 	public final static String IMDB_LINK="http://www.imdb.com/title/";
 	public final static String YOUTUBE_TRAILER_ROOT = "//www.youtube.com/embed/";
 	public final static String POPULAR_MOVIES = ROOT + "/discover/movie?sort_by=popularity.desc&" + API_KEY;
@@ -65,9 +65,10 @@ public final class Constants implements Serializable {
 	public final static String MOVIE_SPOKEN_LANGUAGE = "spoken_languages";
 	public final static String MOVIE_BUDGET = "budget";
 	public final static String MOVIE_REVENUE = "revenue";
-	
+
 	//Genre browse
-	public final static String BROWSE_GENRE = ROOT+"/genre/"+REPLACE_STRING+"/movies?"+API_KEY+PAGEID;
+	public final static String WITH_GENRES = "&with_genres=";
+	public final static String BROWSE_GENRE = ROOT+"/discover/movie?"+API_KEY+WITH_GENRES+PAGEID;
 //	"http://api.themoviedb.org/3/genre/", id, "/movies?api_key=
 	
 	

@@ -1,6 +1,6 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
-import static my.vaadin.app.Constants.*;
+import static my.vaadin.app.client.Constants.*;
 
 import java.awt.List;
 import java.lang.reflect.Array;
@@ -80,7 +80,7 @@ public class BrowseGenresLayout extends VerticalLayout {
 			removeComponent(getComponent(1));
 		}
 		JsonObject jsonObject = JsonSingleton.getInstance()
-				.getJsonObjectFromURL(BROWSE_GENRE.replace(REPLACE_STRING, genres) + pageId);
+				.getJsonObjectFromURL(BROWSE_GENRE.replace(WITH_GENRES, WITH_GENRES+genres) + pageId);
 
 		addComponent(new SearchLayout(bodyLayout, jsonObject, false, null, genres));
 

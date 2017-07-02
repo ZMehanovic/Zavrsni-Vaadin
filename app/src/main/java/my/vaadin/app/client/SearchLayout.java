@@ -1,17 +1,17 @@
-package my.vaadin.app;
+package my.vaadin.app.client;
 
-import static my.vaadin.app.Constants.CURRENT_PAGE;
-import static my.vaadin.app.Constants.DESCRIPTION;
-import static my.vaadin.app.Constants.GENRE_IDS;
-import static my.vaadin.app.Constants.NAVIGATION_RESULT_PAGE_NUMBER;
-import static my.vaadin.app.Constants.NAVIGATION_SEARCH_PAGE;
-import static my.vaadin.app.Constants.POSTER_IMAGE_185;
-import static my.vaadin.app.Constants.POSTER_PATH;
-import static my.vaadin.app.Constants.RELEASE_DATE;
-import static my.vaadin.app.Constants.RESULTS;
-import static my.vaadin.app.Constants.TITLE;
-import static my.vaadin.app.Constants.TOTAL_PAGES;
-import static my.vaadin.app.Constants.VOTE_AVERAGE;
+import static my.vaadin.app.client.Constants.CURRENT_PAGE;
+import static my.vaadin.app.client.Constants.DESCRIPTION;
+import static my.vaadin.app.client.Constants.GENRE_IDS;
+import static my.vaadin.app.client.Constants.NAVIGATION_RESULT_PAGE_NUMBER;
+import static my.vaadin.app.client.Constants.NAVIGATION_SEARCH_PAGE;
+import static my.vaadin.app.client.Constants.POSTER_IMAGE_185;
+import static my.vaadin.app.client.Constants.POSTER_PATH;
+import static my.vaadin.app.client.Constants.RELEASE_DATE;
+import static my.vaadin.app.client.Constants.RESULTS;
+import static my.vaadin.app.client.Constants.TITLE;
+import static my.vaadin.app.client.Constants.TOTAL_PAGES;
+import static my.vaadin.app.client.Constants.VOTE_AVERAGE;
 
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
