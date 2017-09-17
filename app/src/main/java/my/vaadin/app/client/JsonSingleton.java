@@ -1,6 +1,5 @@
 package my.vaadin.app.client;
 
-
 import static my.vaadin.app.client.Constants.GENRES;
 import static my.vaadin.app.client.Constants.LIST_OF_GENRES;
 
@@ -18,56 +17,58 @@ import elemental.json.impl.JsonUtil;
 
 public class JsonSingleton {
 
-	private JsonSingleton(){}
-	
-	private static class SingletonHelper{
-		private static final JsonSingleton INSTANCE =new JsonSingleton();
+	private JsonSingleton() {
 	}
-	
-	public static JsonSingleton getInstance(){
+
+	private static class SingletonHelper {
+		private static final JsonSingleton INSTANCE = new JsonSingleton();
+	}
+
+	public static JsonSingleton getInstance() {
 		return SingletonHelper.INSTANCE;
 	}
-	
 
-	private final HashMap<Integer, String> genreMap=getGenres();
-	
-	public JsonObject getJsonObjectFromURL(String linkURL){
-		JsonObject jsObject=null;
+	private final HashMap<Integer, String> genreMap = getGenres();
+
+	public JsonObject getJsonObjectFromURL(String linkURL) {
+		JsonObject jsObject = null;
 		try {
 			URL myservice = new URL(linkURL);
 
 			InputStream openStream = myservice.openStream();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(openStream));
 			String line;
-			String str="";
-			
+			String str = "";
+
 			while ((line = bufferedReader.readLine()) != null) {
-				str+=line;
+				str += line;
 			}
-			jsObject= JsonUtil.parse(str);
+			jsObject = JsonUtil.parse(str);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return jsObject;
 	}
-	
+
 	private HashMap<Integer, String> getGenres() {
 		// TODO Auto-generated method stub
-		JsonArray jsObject=getJsonObjectFromURL(LIST_OF_GENRES).getArray(GENRES);
-		HashMap<Integer, String> genresMap=new HashMap<>();
-		for(int i=0;i<jsObject.length();i++){
-			genresMap.put((int)jsObject.getObject(i).get("id").asNumber(), jsObject.getObject(i).get("name").asString());
+		JsonArray jsObject = getJsonObjectFromURL(LIST_OF_GENRES).getArray(GENRES);
+		HashMap<Integer, String> genresMap = new HashMap<>();
+		for (int i = 0; i < jsObject.length(); i++) {
+			genresMap.put((int) jsObject.getObject(i).get("id").asNumber(),
+					jsObject.getObject(i).get("name").asString());
 		}
 		return genresMap;
 	}
 
-	public ArrayList<String> getGenreList(int... genreKeys){
-		ArrayList<String> genreList=new ArrayList<String>();
-		for(int key: genreKeys){
-			//Some keys might have been deleted by TMDB e.g 10769-Foreign -> https://www.themoviedb.org/talk/586ecd68c3a3683b6900aebc
-			if(genreMap.get(key)!=null){
+	public ArrayList<String> getGenreList(int... genreKeys) {
+		ArrayList<String> genreList = new ArrayList<String>();
+		for (int key : genreKeys) {
+			// Some keys might have been deleted by TMDB e.g 10769-Foreign ->
+			// https://www.themoviedb.org/talk/586ecd68c3a3683b6900aebc
+			if (genreMap.get(key) != null) {
 				genreList.add(genreMap.get(key).toString());
-			}else{
+			} else {
 				genreList.add("");
 			}
 		}
@@ -78,6 +79,4 @@ public class JsonSingleton {
 		return genreMap;
 	}
 
-	
-	
 }

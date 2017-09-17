@@ -34,37 +34,24 @@ public class MyUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
-
 		getPage().addPopStateListener(new PopStateListener() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void uriChanged(PopStateEvent event) {
-
 				navigateToPage(Page.getCurrent().getLocation().toString());
 			}
-
 		});
 
-		if (Page.getCurrent().getLocation() == null || Page.getCurrent().getLocation().toString().isEmpty() || !Page.getCurrent().getLocation().toString().contains("?")) {
-
+		if (Page.getCurrent().getLocation() == null || Page.getCurrent().getLocation().toString().isEmpty()
+				|| !Page.getCurrent().getLocation().toString().contains("?")) {
 			Page.getCurrent().pushState(NAVIGATION_START_PAGE);
 		} else {
 			navigateToPage(Page.getCurrent().getLocation().toString());
 		}
-
 		mainLayout.addComponents(headerLayout, bodyLayout);
 		setContent(mainLayout);
-
-	}
-
-	public HeaderLayout getHeaderLayout() {
-		return headerLayout;
-	}
-
-	public BodyLayout getBodyLayout() {
-		return bodyLayout;
 	}
 
 	private void navigateToPage(String url) {
@@ -86,11 +73,11 @@ public class MyUI extends UI {
 			bodyLayout.showMovieDetails(movieId);
 			break;
 		case 4:
-			String genres=null;
+			String genres = null;
 			int resPage = 1;
-			if(splitVariables.length>1){
-				genres= splitVariables[1].split("=")[1];
-				resPage=Integer.parseInt(splitVariables[2].split("=")[1]);
+			if (splitVariables.length > 1) {
+				genres = splitVariables[1].split("=")[1];
+				resPage = Integer.parseInt(splitVariables[2].split("=")[1]);
 			}
 			bodyLayout.browseGenres(false, genres, resPage);
 			break;
@@ -98,6 +85,14 @@ public class MyUI extends UI {
 			break;
 		}
 
+	}
+
+	public HeaderLayout getHeaderLayout() {
+		return headerLayout;
+	}
+
+	public BodyLayout getBodyLayout() {
+		return bodyLayout;
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

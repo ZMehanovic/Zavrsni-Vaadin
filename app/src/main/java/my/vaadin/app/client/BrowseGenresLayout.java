@@ -1,9 +1,11 @@
 package my.vaadin.app.client;
 
-import static my.vaadin.app.client.Constants.*;
+import static my.vaadin.app.client.Constants.BROWSE_GENRE;
+import static my.vaadin.app.client.Constants.NAVIGATION_BROWSE_PAGE;
+import static my.vaadin.app.client.Constants.NAVIGATION_GENRE_IDS;
+import static my.vaadin.app.client.Constants.NAVIGATION_RESULT_PAGE_NUMBER;
+import static my.vaadin.app.client.Constants.WITH_GENRES;
 
-import java.awt.List;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,16 +15,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.atmosphere.config.service.Singleton;
-
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
 import elemental.json.JsonObject;
@@ -36,9 +33,9 @@ public class BrowseGenresLayout extends VerticalLayout {
 	private Set<Integer> genreIds = new HashSet<>();
 	private String genres;
 	private int pageId;
-	HashMap<Integer, String> genreMap = JsonSingleton.getInstance().getGenreMap();
-	CssLayout genrePickerLayout = new CssLayout() {
+	private HashMap<Integer, String> genreMap = JsonSingleton.getInstance().getGenreMap();
 
+	private CssLayout genrePickerLayout = new CssLayout() {
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -48,15 +45,13 @@ public class BrowseGenresLayout extends VerticalLayout {
 			}
 			return super.getCss(c);
 		}
-
 	};
 
-	
-	public void loadData(BodyLayout bodyLayout, String genres, int page){
+	public void loadData(BodyLayout bodyLayout, String genres, int page) {
 		this.bodyLayout = bodyLayout;
 		this.genres = genres;
 		this.pageId = page;
-		
+
 		setPickerLayout();
 		if (genres != null) {
 			genreHistory = NAVIGATION_GENRE_IDS + genres + NAVIGATION_RESULT_PAGE_NUMBER + pageId;
@@ -64,7 +59,7 @@ public class BrowseGenresLayout extends VerticalLayout {
 		}
 		Page.getCurrent().pushState(NAVIGATION_BROWSE_PAGE + genreHistory);
 	}
-	
+
 	private void fillData() {
 
 		genreIds = Stream.of(genres.split(",")).map(Integer::parseInt).collect(Collectors.toSet());
@@ -76,11 +71,11 @@ public class BrowseGenresLayout extends VerticalLayout {
 	}
 
 	private void browse() {
-		if(getComponentCount()>1&&getComponent(1)!=null){
+		if (getComponentCount() > 1 && getComponent(1) != null) {
 			removeComponent(getComponent(1));
 		}
 		JsonObject jsonObject = JsonSingleton.getInstance()
-				.getJsonObjectFromURL(BROWSE_GENRE.replace(WITH_GENRES, WITH_GENRES+genres) + pageId);
+				.getJsonObjectFromURL(BROWSE_GENRE.replace(WITH_GENRES, WITH_GENRES + genres) + pageId);
 
 		addComponent(new SearchLayout(bodyLayout, jsonObject, false, null, genres));
 

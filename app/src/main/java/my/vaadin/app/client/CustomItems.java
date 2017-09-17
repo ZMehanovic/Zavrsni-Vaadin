@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.BrowserWindowOpener;
-import com.vaadin.server.ExternalResource;import com.vaadin.server.Resource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
@@ -46,8 +46,6 @@ public class CustomItems implements Serializable {
 		}else{
 			description.setWidth("800px");
 		}
-//		description.width
-
 		return description;
 	}
 
@@ -61,7 +59,6 @@ public class CustomItems implements Serializable {
 		ArrayList<String> genresList = new ArrayList<>();
 		for (int i = 0; i < genreIDs.length(); i++) {
 			if (isFromDetails) {
-				genreIds[i] = (int) genreIDs.getObject(i).getNumber("id");
 				genresList.add(genreIDs.getObject(i).getString("name"));
 			} else {
 				genreIds[i] = (int) genreIDs.getNumber(i);
@@ -72,7 +69,6 @@ public class CustomItems implements Serializable {
 		}
 		for (String genre : genresList) {
 			Label l = new Label(genre);
-			// TODO click handler for genre browsing
 			genreLayout.addComponent(l);
 		}
 
@@ -86,11 +82,8 @@ public class CustomItems implements Serializable {
 	}
 	
 	public static Image getImage(String poster, String title, String imageID, String imageSize, boolean isFromDetails, BodyLayout bodyLayout){
-
-
 		Image img = new Image();
-		
-		
+	
 		if (poster==null||poster.isEmpty()) {
 			img.setSource(new ThemeResource("images/Default_Image.jpg"));
 		} else {
@@ -100,16 +93,17 @@ public class CustomItems implements Serializable {
 		
 		img.setId(imageID);
 		img.setDescription(title);
-		img.addClickListener(e -> {
-			if (!isFromDetails) {
-				bodyLayout.showMovieDetails(Integer.parseInt(img.getId()));
-			}
-		});
+		
 		if (isFromDetails) {
 			BrowserWindowOpener imgOpener = new BrowserWindowOpener(POSTER_IMAGE_ORIGINAL + poster);
 			imgOpener.setWindowName("_blank");
 			imgOpener.extend(img);
+		} else {
+			img.addClickListener(e -> {
+				bodyLayout.showMovieDetails(Integer.parseInt(img.getId()));
+			});
 		}
+		
 		return img;
 	}
 	

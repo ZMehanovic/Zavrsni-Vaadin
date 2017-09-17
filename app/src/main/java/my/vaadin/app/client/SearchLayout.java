@@ -1,17 +1,6 @@
 package my.vaadin.app.client;
 
-import static my.vaadin.app.client.Constants.CURRENT_PAGE;
-import static my.vaadin.app.client.Constants.DESCRIPTION;
-import static my.vaadin.app.client.Constants.GENRE_IDS;
-import static my.vaadin.app.client.Constants.NAVIGATION_RESULT_PAGE_NUMBER;
-import static my.vaadin.app.client.Constants.NAVIGATION_SEARCH_PAGE;
-import static my.vaadin.app.client.Constants.POSTER_IMAGE_185;
-import static my.vaadin.app.client.Constants.POSTER_PATH;
-import static my.vaadin.app.client.Constants.RELEASE_DATE;
-import static my.vaadin.app.client.Constants.RESULTS;
-import static my.vaadin.app.client.Constants.TITLE;
-import static my.vaadin.app.client.Constants.TOTAL_PAGES;
-import static my.vaadin.app.client.Constants.VOTE_AVERAGE;
+import static my.vaadin.app.client.Constants.*;
 
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
@@ -43,7 +32,6 @@ public class SearchLayout extends VerticalLayout {
 
 		int currentPage = (int) jsonObject.getNumber(CURRENT_PAGE);
 		if (!isRecommendation && jsonObject.getNumber(TOTAL_PAGES) > 1) {
-			//TODO check why TMDb is weird (12,18 not ok 18,12 is ok?!?) BROWSE
 			resolvePagingLayout(currentPage, (int) jsonObject.getNumber(TOTAL_PAGES));
 
 		}
@@ -137,7 +125,8 @@ public class SearchLayout extends VerticalLayout {
 
 			String poster = jsObject.get(POSTER_PATH).jsEquals(Json.createNull()) ? ""
 					: jsObject.getString(POSTER_PATH);
-			String title = jsObject.get(TITLE).jsEquals(Json.createNull()) ? "" : jsObject.getString(TITLE);
+			String title = jsObject.get(TITLE) == null || jsObject.get(TITLE).jsEquals(Json.createNull()) ? ""
+					: jsObject.getString(TITLE);
 			String imageID = String.valueOf((int) jsObject.getNumber("id"));
 
 			imageDetailsLayout.addComponents(
@@ -151,19 +140,21 @@ public class SearchLayout extends VerticalLayout {
 
 	private VerticalLayout getMovieDetails(JsonObject jsObject) {
 		VerticalLayout movieDetailsLayout = new VerticalLayout();
-
+		
 		HorizontalLayout detailsHeaderLayout = new HorizontalLayout();
 		Label title = new Label("Title: " + jsObject.getString(TITLE));
 		HorizontalLayout vote = CustomItems.avgVoteStarLayout(String.valueOf(jsObject.getNumber(VOTE_AVERAGE)));
 		detailsHeaderLayout.addComponents(title, vote);
 
-		Label description = CustomItems.descriptionLabel(jsObject.getString(DESCRIPTION), isRecommendation);
+		String desc=jsObject.get(DESCRIPTION).jsEquals(Json.createNull())?"Missing description":jsObject.getString(DESCRIPTION);
+		Label description = CustomItems.descriptionLabel(desc, isRecommendation);
 
 		HorizontalLayout detailsFooterLayout = new HorizontalLayout();
 
 		HorizontalLayout genres = CustomItems.genresLayout(jsObject.getArray(GENRE_IDS), false);
-
-		Label releaseDate = new Label("Release Date: " + jsObject.getString(RELEASE_DATE));
+		
+		String rDate=jsObject.get(RELEASE_DATE).jsEquals(Json.createNull())?"Missing release date":jsObject.getString(RELEASE_DATE);
+		Label releaseDate = new Label("Release Date: " + rDate);
 		detailsFooterLayout.addComponents(genres, releaseDate);
 
 		Button moreDetails = new Button("More details...");

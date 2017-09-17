@@ -53,6 +53,7 @@ public final class Constants implements Serializable {
 	public final static String CREW_DEPARTMENT =  "department";
 	public final static String CREW_JOB =  "job";
 	public final static String RECOMMENDATIONS =  "similar";
+	public final static String MEDIA_TYPE =  "media_type";
 	
 	//Movie details
 	public final static String MOVIE_HOME_PAGE = "homepage";

@@ -41,8 +41,9 @@ import static my.vaadin.app.client.Constants.VOTE_COUNT;
 import static my.vaadin.app.client.Constants.YOUTUBE_TRAILER_ROOT;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
+import com.vaadin.server.BrowserWindowOpener;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -110,7 +111,6 @@ public class DetailsLayout extends FormLayout {
 		public DetailsLayout build() {
 			return new DetailsLayout(this);
 		}
-
 	}
 
 	private DetailsLayout(DetailsLayoutBuilder builder) {
@@ -136,12 +136,10 @@ public class DetailsLayout extends FormLayout {
 		HorizontalLayout movieDetailsLayout = new HorizontalLayout();
 		HorizontalLayout movieDetailsHeaderLayout = new HorizontalLayout();
 
-		// TODO add to layout, add icons for bookmarks etc.
-
 		Label movieName = new Label(jsObject.getString(TITLE));
 		movieName.addStyleName(ValoTheme.LABEL_H2);
 
-		String poster = jsObject.getString(POSTER_PATH);
+		String poster = jsObject.get(POSTER_PATH).jsEquals(Json.createNull()) ? null : jsObject.getString(POSTER_PATH);
 		String title = jsObject.getString(TITLE);
 		String imageID = String.valueOf((int) jsObject.getNumber("id"));
 
@@ -149,9 +147,9 @@ public class DetailsLayout extends FormLayout {
 
 		Button imdbLink = new Button("IMDB");
 		imdbLink.setStyleName(ValoTheme.BUTTON_LINK);
-		imdbLink.addClickListener(e -> {
-			getUI().getPage().open(IMDB_LINK + jsObject.getString(IMDB_ID), "_blank");
-		});
+		BrowserWindowOpener opener = new BrowserWindowOpener(new ExternalResource(IMDB_LINK + jsObject.getString(IMDB_ID)));
+		opener.setFeatures("");
+		opener.extend(imdbLink);
 
 		HorizontalLayout avgVote = CustomItems.avgVoteStarLayout(String.valueOf(jsObject.getNumber(VOTE_AVERAGE)));
 		avgVote.setDescription(String.valueOf(jsObject.getNumber(VOTE_COUNT)));
@@ -184,8 +182,6 @@ public class DetailsLayout extends FormLayout {
 		movieTabs.addTab(getImageTab(), "Images");
 		movieTabs.addTab(getCastTab(), "Cast");
 		movieTabs.addTab(getCrewTab(), "Crew");
-		// Notification.show(UI.getCurrent().getPage().getBrowserWindowWidth()+"
-		// ");
 		movieTabs.addTab(new SearchLayout(bodyLayout, jsObject.getObject(RECOMMENDATIONS), true, null, null),
 				"Recommendations");
 
@@ -211,12 +207,11 @@ public class DetailsLayout extends FormLayout {
 		String collectionString = "<b>Collection: </b>";
 		if (!jsObject.get(MOVIE_COLLECTION).jsEquals(Json.createNull())) {
 			collectionString += jsObject.getObject(MOVIE_COLLECTION).getString("name");
-			// TODO open collection details on click
 		}
 		Label collections = CustomItems.htmlLabel(collectionString);
-		Label productionCompanies = getcompanies(jsObject.getArray(MOVIE_PRODUCTION_COMPANY), "Production companies: ");
-		Label productionCountries = getcompanies(jsObject.getArray(MOVIE_PRODUCTION_COUNTRY), "Production countries: ");
-		Label spokenLanguages = getcompanies(jsObject.getArray(MOVIE_SPOKEN_LANGUAGE), "Spoken languages: ");
+		Label productionCompanies = getArrayLabel(jsObject.getArray(MOVIE_PRODUCTION_COMPANY), "Production companies: ");
+		Label productionCountries = getArrayLabel(jsObject.getArray(MOVIE_PRODUCTION_COUNTRY), "Production countries: ");
+		Label spokenLanguages = getArrayLabel(jsObject.getArray(MOVIE_SPOKEN_LANGUAGE), "Spoken languages: ");
 
 		movieDetails.addComponents(homePage, status, releaseDate, runtime, budget, revenue, collections,
 				productionCompanies, productionCountries, spokenLanguages);
@@ -224,7 +219,7 @@ public class DetailsLayout extends FormLayout {
 		return movieDetails;
 	}
 
-	private Label getcompanies(JsonArray array, String title) {
+	private Label getArrayLabel(JsonArray array, String title) {
 		String names = "<b>" + title + "</b>";
 		String delim = "";
 		for (int i = 0; i < array.length(); i++) {
@@ -235,7 +230,7 @@ public class DetailsLayout extends FormLayout {
 
 		return l;
 	}
-
+	
 	private Component getTrailerTab() {
 		CssLayout trailers = new CssLayout();
 		trailers.setWidth("1000px");

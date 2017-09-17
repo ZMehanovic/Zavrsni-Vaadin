@@ -6,7 +6,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -44,12 +43,12 @@ public class HeaderLayout extends HorizontalLayout {
 		});
 		btnLogin.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		btnLogin.addClickListener(e -> {
-			final LoginWindow loginWindow=new LoginWindow();
-			myUI.addWindow(loginWindow);
+			myUI.addWindow(new LoginWindow());
 		});
 		btnRegister.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		btnRegister.addClickListener(e -> {
-//			Notification.show("Click");
+			myUI.addWindow(new RegistrationWindow());
+			
 		});
 
 		buttons.addComponents(btnBrowse, btnLogin, btnRegister);

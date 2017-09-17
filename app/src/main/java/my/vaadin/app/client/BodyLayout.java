@@ -30,11 +30,10 @@ public class BodyLayout extends FormLayout {
 		JsonObject jsObject = JsonSingleton.getInstance().getJsonObjectFromURL(POPULAR_MOVIES);
 
 		if (jsObject != null) {
-
 			addComponent(getPopularMoviesPosterGrid(jsObject.getArray(RESULTS)));
 
 		} else {
-			Notification.show("Error fetching data...", Type.ERROR_MESSAGE);
+			Notification.show("Error fetching data...", Type.WARNING_MESSAGE);
 		}
 
 	}
@@ -67,7 +66,6 @@ public class BodyLayout extends FormLayout {
 			getStartBody();
 			Page.getCurrent().pushState(NAVIGATION_START_PAGE);
 		} else {
-			// TODO JSON singleton
 			String url = MOVIE_SEARCH + QUERY + searchString + PAGEID + page;
 			JsonObject jsObject = JsonSingleton.getInstance().getJsonObjectFromURL(url);
 			if (jsObject != null && jsObject.getNumber(TOTAL_RESULTS) > 0) {
@@ -77,7 +75,7 @@ public class BodyLayout extends FormLayout {
 					UI.getCurrent().scrollIntoView(myUI.getHeaderLayout());
 				}
 			} else {
-				Notification.show("Data not found.", Notification.Type.ERROR_MESSAGE);
+				Notification.show("Data not found.", Notification.Type.WARNING_MESSAGE);
 			}
 		}
 	}
